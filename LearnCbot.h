@@ -6,6 +6,7 @@
 //
 // 2015-04-24T03:40:39+0200	: Primera versión
 // 2015-04-24T11:36:13+0200	: Corregir nombres
+// 2015-04-25T02:17:58+0200	: Reardenar secciones
 //
 
 #ifndef LearnCbot_h
@@ -127,10 +128,9 @@ void LCbot_Setup () {				// Define I/O
     pinMode (Led3Pin, OUTPUT);
     pinMode (Led4Pin, OUTPUT);
 
-    Led1Off;
-    Led2Off;
-    Led3Off;
-    Led4Off;
+    for (int i = 0; i <= 4; i++) {
+	LedOff(i);
+    }
 }
 
 void LCbot_ShowStart () {			// Show LearnCbot is ready
