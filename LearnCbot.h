@@ -78,27 +78,31 @@
 #define LedVert2		Led3Pin
 
 // Actions
-#define Led(x)			digitalRead (x)
+#define LedEtat(x)		digitalRead (x)
 #define LedOn(x)		digitalWrite(x, HIGH)
 #define LedOff(x)		digitalWrite(x, LOW )
-#define LedToggle(x)		digitalWrite(x, !Led(x))
+#define LedToggle(x)		digitalWrite(x, !LedEtat(x))
 
+#define Led1Etat			LedEtat  (Led1Pin)
 #define Led1On			LedOn    (Led1Pin)
 #define Led1Off			LedOff   (Led1Pin)
 #define Led1Toggle		LedToggle(Led1Pin)
+#define Led2Etat			LedEtat  (Led2Pin)
 #define Led2On			LedOn    (Led2Pin)
 #define Led2Off			LedOff   (Led2Pin)
 #define Led2Toggle		LedToggle(Led2Pin)
+#define Led3Etat			LedEtat  (Led3Pin)
 #define Led3On			LedOn    (Led3Pin)
 #define Led3Off			LedOff   (Led3Pin)
 #define Led3Toggle		LedToggle(Led3Pin)
+#define Led4Etat			LedEtat  (Led4Pin)
 #define Led4On			LedOn    (Led4Pin)
 #define Led4Off			LedOff   (Led4Pin)
 #define Led4Toggle		LedToggle(Led4Pin)
 
 // LED in carte
 #define LedCartePin		LED_BUILTIN
-#define LedCarte		Led      (LedCartePin)
+#define LedCarteEtat		LedEtat  (LedCartePin)
 #define LedCarteOn		LedOn    (LedCartePin)
 #define LedCarteOff		LedOff   (LedCartePin)
 #define LedCarteToggle		LedToggle(LedCartePin)
@@ -118,36 +122,36 @@
 
 
 void LCbot_Setup () {				// Define I/O
-    pinMode (HPPin, OUTPUT);
 
-    pinMode (Pous1Pin, INPUT);
-    pinMode (Pous2Pin, INPUT);
-
-    pinMode (Led1Pin, OUTPUT);
-    pinMode (Led2Pin, OUTPUT);
-    pinMode (Led3Pin, OUTPUT);
-    pinMode (Led4Pin, OUTPUT);
-
-    for (int i = 0; i <= 4; i++) {
-	LedOff(i);
-    }
+// Direction:
+//  0 : INPUT
+//  1 : OUTPUT
+    DDRD = 0b11110010 | (DDRD & 0b1);
+//           ^------- pinMode (Led4Pin, OUTPUT);
+//            ^------ pinMode (Led3Pin, OUTPUT);
+//             ^----- pinMode (Led2Pin, OUTPUT);
+//              ^---- pinMode (Led1Pin, OUTPUT);
+//               ^--- pinMode (Pous2Pin, INPUT);
+//                ^-- pinMode (Pous1Pin, INPUT);
+//                 ^- pinMode (HPPin, OUTPUT);
 }
 
 void LCbot_ShowStart () {			// Show LearnCbot is ready
     pinMode (LedCartePin, OUTPUT);
 
     delay(200);
-    LedCarteOn; delay(500);
+    LedCarteOn;
+    delay(500);
 
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < 3; i++) {		// 3 parpadeos
 	LedCarteOff;	delay(100);
 	LedCarteOn;	delay(100);
     }
 
-    LedCarteOff; delay(200);
+    LedCarteOff; delay(200);			// apagar
 }
 
-// LCbot OOP
+// LCbot OOP ------------------------------------------------------------------
 class LCbot {
     public:
 	LCbot();
