@@ -8,17 +8,19 @@
 // 2015-04-24	: Corregir nombres
 // 2015-04-25	: Reardenar secciones
 // 2015-05-02	: Más simple
+// 2015-05-05	: versiones canónica y directa
 //
 
 #ifndef LearnCbot_h
 #define LearnCbot_h
 
+#include "Arduino.h"
+
 // (un)define LCbot_CANONICO two versions the code
 // LCbot_CANONICO defined: use Arduino API
 // LCbot_CANONICO not defined: use port calls directly
 #undef LCbot_CANONICO
-
-#include "Arduino.h"
+//#define LCbot_CANONICO
 
 // Pousspoir - Buttons - Botones - Botãos -------------------------------------
 
@@ -87,6 +89,21 @@
 #define Led4Off			LedOff   (Led4Pin)
 #define Led4Toggle		LedToggle(Led4Pin)
 
+// LED Carte PORTB
+#define LedCartePin		LED_BUILTIN
+
+#ifdef  LCbot_CANONICO
+#define LedCarteEtat		digitalRead (LedCartePin)
+#define LedCarteOn		digitalWrite(LedCartePin, HIGH)
+#define LedCarteOff		digitalWrite(LedCartePin, LOW )
+#define LedCarteToggle		digitalWrite(LedCartePin, !LedEtat(LedCartePin))
+#else
+#define LedCarteEtat		((PINB & (1<<(LedCartePin-8))) != 0)
+#define LedCarteOn		(PORTB |=  (1<<(LedCartePin-8)))
+#define LedCarteOff		(PORTB &= ~(1<<(LedCartePin-8)))
+#define LedCarteToggle		(PINB = (1<<(LedCartePin-8)))
+#endif
+
 // Haut-Parleur
 #define HPPin			PIN1
 #define HPOn			LedOn    (HPPin)
@@ -107,28 +124,28 @@ void LCbot_Setup () {
     //  0 : INPUT
     //  1 : OUTPUT
     DDRD = 0b11110010 | (DDRD & 0b1);
-    //       ^||||||- pinMode (Led4Pin, OUTPUT);
-    //        ^|||||- pinMode (Led3Pin, OUTPUT);
-    //         ^||||- pinMode (Led2Pin, OUTPUT);
-    //          ^|||- pinMode (Led1Pin, OUTPUT);
-    //           ^||- pinMode (Pous2Pin, INPUT);
-    //            ^|- pinMode (Pous1Pin, INPUT);
-    //             ^- pinMode (HPPin, OUTPUT);
+    //       ^||||||- pinMode (Led4Pin,  OUTPUT);
+    //        ^|||||- pinMode (Led3Pin,  OUTPUT);
+    //         ^||||- pinMode (Led2Pin,  OUTPUT);
+    //          ^|||- pinMode (Led1Pin,  OUTPUT);
+    //           ^||- pinMode (Pous2Pin, INPUT );
+    //            ^|- pinMode (Pous1Pin, INPUT );
+    //             ^- pinMode (HPPin,    OUTPUT);
 }
 
 void LCbot_ShowStart () {			// Show LearnCbot is ready
-    pinMode (LED_BUILTIN, OUTPUT);
+    pinMode (LedCartePin, OUTPUT);
 
     delay(200);
-    digitalWrite(LED_BUILTIN, HIGH);
+    LedCarteOn;
     delay(500);
 
     for (int i = 0; i < 3; i++) {		// 3 parpadeos
-	digitalWrite(LED_BUILTIN, LOW );	delay(100);
-	digitalWrite(LED_BUILTIN, HIGH);	delay(100);
+	LedCarteOff;	delay(100);
+	LedCarteOn;	delay(100);
     }
 
-    digitalWrite(LED_BUILTIN, LOW );		// apagar
+    LedCarteOff;				// apagar
     delay(200);
 }
 
