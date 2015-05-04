@@ -62,14 +62,14 @@
 // Actions PORTD
 #ifdef  LCbot_CANONICO
 #define LedEtat(x)		digitalRead (x)
+#define LedToggle(x)		digitalWrite(x, !LedEtat(x))
 #define LedOn(x)		digitalWrite(x, HIGH)
 #define LedOff(x)		digitalWrite(x, LOW )
-#define LedToggle(x)		digitalWrite(x, !LedEtat(x))
 #else
-#define LedEtat(x)		((PIND & (1<<(x))) != 0)
-#define LedOn(x)		(PORTD |=  (1<<(x)))
-#define LedOff(x)		(PORTD &= ~(1<<(x)))
-#define LedToggle(x)		(PIND = (1<<(x)))
+#define LedEtat(x)		((PIND  &   (1<<(x))) != 0)
+#define LedToggle(x)		 (PIND   =  (1<<(x)))
+#define LedOn(x)		 (PORTD |=  (1<<(x)))
+#define LedOff(x)		 (PORTD &= ~(1<<(x)))
 #endif
 
 #define Led1Etat		LedEtat  (Led1Pin)
@@ -98,10 +98,10 @@
 #define LedCarteOff		digitalWrite(LedCartePin, LOW )
 #define LedCarteToggle		digitalWrite(LedCartePin, !LedEtat(LedCartePin))
 #else
-#define LedCarteEtat		((PINB & (1<<(LedCartePin-8))) != 0)
-#define LedCarteOn		(PORTB |=  (1<<(LedCartePin-8)))
-#define LedCarteOff		(PORTB &= ~(1<<(LedCartePin-8)))
-#define LedCarteToggle		(PINB = (1<<(LedCartePin-8)))
+#define LedCarteEtat		((PINB  &   (1<<(LedCartePin-8))) != 0)
+#define LedCarteToggle		 (PINB   =  (1<<(LedCartePin-8)))
+#define LedCarteOn		 (PORTB |=  (1<<(LedCartePin-8)))
+#define LedCarteOff		 (PORTB &= ~(1<<(LedCartePin-8)))
 #endif
 
 // Haut-Parleur
